@@ -1,0 +1,20 @@
+common1:
+    base_path: /opt/ComfyUI/models
+
+    checkpoints: Stable-diffusion
+    diffusion_models: |
+        diffusion_models
+        unet
+    text_encoders: text_encoder
+    configs: Stable-diffusion
+    vae: VAE
+    loras: |
+        Lora
+        LyCORIS
+    upscale_models: |
+        ESRGAN
+        RealESRGAN
+        SwinIR
+    embeddings: embeddings
+    hypernetworks: hypernetworks
+    controlnet: ControlNet

@@ -1,0 +1,74 @@
+name: ai
+
+services:
+  comfyui:
+    runtime: nvidia
+    build:
+      context: .
+      target: comfyui
+      args:
+        CONT_UBUNTU_VER_MAJOR: ${CONT_UBUNTU_VER_MAJOR}
+        CONT_UBUNTU_VER_MINOR: ${CONT_UBUNTU_VER_MINOR}
+        CONT_CUDA_VER_MAJOR: ${CONT_CUDA_VER_MAJOR}
+        CONT_CUDA_VER_MINOR: ${CONT_CUDA_VER_MINOR}
+        CONT_CUDA_VER_PATCH: ${CONT_CUDA_VER_PATCH}
+        CONT_TORCH_VER_MAJOR: ${CONT_TORCH_VER_MAJOR}
+        CONT_TORCH_VER_MINOR: ${CONT_TORCH_VER_MINOR}
+        CONT_TORCH_VER_PATCH: ${CONT_TORCH_VER_PATCH}
+        CONT_TORCH_INDEX_PREFIX: ${CONT_TORCH_INDEX_PREFIX}
+        CONT_TORCH_VERSION_DEP_STRING: ${CONT_TORCH_VERSION_DEP_STRING}
+        TORCH_CUDA_ARCH_LIST: ${TORCH_CUDA_ARCH_LIST}
+        CONT_USER: ${CONT_USER}
+        CONT_GROUP: ${CONT_GROUP}
+    image: comfyui:latest
+    command:
+      [
+        "python",
+        "main.py",
+        "--use-sage-attention",
+        "--disable-smart-memory",
+        "--async-offload",
+        "--listen",
+        "0.0.0.0",
+        "--base-directory",
+        "/opt/ComfyUI",
+      ]
+    restart: no
+    sysctls:
+      net.ipv6.conf.all.disable_ipv6: 1
+    environment:
+      TZ: ${CONT_TZ}
+      NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES}
+      NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
+    volumes:
+      - D:/AI/ComfyUI/Settings:/opt/ComfyUI/user/default:rw
+      - D:/AI/ComfyUI/Workflows:/opt/ComfyUI/user/default/workflows:rw
+      - D:/AI/ComfyUI/Models:/opt/ComfyUI/models
+      - D:/AI/ComfyUI/Output:/opt/ComfyUI/output
+    networks:
+      - ai-internal-net
+    stdin_open: true
+    tty: true
+
+  edge:
+    image: alpine/socat
+    command: -d -d tcp-listen:8188,fork,reuseaddr tcp-connect:comfyui:8188
+    depends_on:
+      - comfyui
+    ports:
+      - name: ComfyUI Web Interface
+        target: 8188
+        published: 8188
+        app_protocol: http
+        protocol: tcp
+    networks:
+      - ai-internal-net
+      - ai-public-net
+
+networks:
+  ai-internal-net:
+    name: ai-internal-net
+    external: true
+  ai-public-net:
+    name: ai-public-net
+    external: true
