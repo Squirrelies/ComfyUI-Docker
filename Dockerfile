@@ -135,6 +135,6 @@ COPY --chown=${CONT_USER}:${CONT_GROUP} --chmod=550 entrypoint.sh /opt/entrypoin
 
 USER root
 EXPOSE 8188/tcp
-VOLUME [ "/opt/ComfyUI/models", "/opt/ComfyUI/output", "/opt/ComfyUI/user/default", "/opt/ComfyUI/user/default/workflows" ]
+VOLUME [ "/opt/ComfyUI/models", "/opt/ComfyUI/output", "/opt/ComfyUI/user/__manager", "/opt/ComfyUI/user/default", "/opt/ComfyUI/user/default/workflows" ]
 ENTRYPOINT [ "/opt/entrypoint.sh" ]
 CMD ["python", "main.py", "--listen", "0.0.0.0", "--base-directory", "/opt/ComfyUI"]

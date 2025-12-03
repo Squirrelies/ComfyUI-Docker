@@ -8,7 +8,7 @@ CN_DIR=${CUI_DIR}/custom_nodes
 echo "↳ Installing ComfyUI and custom node dependencies in $CUI_DIR..."
 
 declare -A REPOS=(
-  ["comfyui-manager"]="https://github.com/ltdrdata/ComfyUI-Manager.git"
+  ["comfyui-manager"]="https://github.com/Comfy-Org/ComfyUI-Manager.git"
   ["rgthree-comfy"]="https://github.com/rgthree/rgthree-comfy.git"
   ["comfyui-kjnodes"]="https://github.com/kijai/ComfyUI-KJNodes.git"
   ["wanblockswap"]="https://github.com/orssorbit/ComfyUI-wanBlockswap.git"

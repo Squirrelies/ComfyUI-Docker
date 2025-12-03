@@ -26,8 +26,6 @@ services:
         "python",
         "main.py",
         "--use-sage-attention",
-        "--disable-smart-memory",
-        "--async-offload",
         "--listen",
         "0.0.0.0",
         "--base-directory",
@@ -41,6 +39,7 @@ services:
       NVIDIA_VISIBLE_DEVICES: ${NVIDIA_VISIBLE_DEVICES}
       NVIDIA_DRIVER_CAPABILITIES: ${NVIDIA_DRIVER_CAPABILITIES}
     volumes:
+      - D:/AI/ComfyUI/ComfyUI-Manager:/opt/ComfyUI/user/__manager:rw
       - D:/AI/ComfyUI/Settings:/opt/ComfyUI/user/default:rw
       - D:/AI/ComfyUI/Workflows:/opt/ComfyUI/user/default/workflows:rw
       - D:/AI/ComfyUI/Models:/opt/ComfyUI/models
