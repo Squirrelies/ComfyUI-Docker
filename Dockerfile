@@ -30,6 +30,9 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
      --mount=type=cache,target=/var/lib/apt,sharing=locked \
      apt-get update && \
+     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends software-properties-common && \
+     add-apt-repository ppa:git-core/ppa && \
+     apt-get update && \
      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
      build-essential \
      git \
@@ -50,9 +53,11 @@ ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${CUDA_HOME}/lib64
 
 WORKDIR /opt
 RUN --mount=type=cache,target=/root/.cache/pip \
-     python -m pip install --pre -U pip setuptools wheel && \
-     python -m pip install --pre --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} --extra-index-url https://pypi.org/simple -U numpy packaging pybind11 ${CONT_TORCH_VERSION_DEP_STRING} "triton>=3.4.0" && \
-     python -m pip install --no-build-isolation -U git+https://github.com/facebookresearch/xformers.git@main#egg=xformers && \
+     python -m pip install -U pip wheel pybind11 && \
+     python -m pip install --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} -U setuptools numpy packaging "triton>=3.4.0" xformers ${CONT_TORCH_VERSION_DEP_STRING} && \
+     # python -m pip install --pre -U pybind11 && \
+     # python -m pip install --pre --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} -U setuptools numpy packaging "triton>=3.4.0" "xformers==0.0.34.dev20251204+cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR}" ${CONT_TORCH_VERSION_DEP_STRING} && \
+     # python -m pip install --no-build-isolation -U git+https://github.com/facebookresearch/xformers.git@main#egg=xformers && \
      python -m pip install --no-build-isolation -U git+https://github.com/woct0rdho/SageAttention.git@main#egg=SageAttention && \
      python -m pip uninstall -y ninja numpy packaging pybind11
 
@@ -70,6 +75,9 @@ RUN rm -f /etc/apt/apt.conf.d/docker-clean
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
      --mount=type=cache,target=/var/lib/apt,sharing=locked \
      apt-get update && \
+     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends software-properties-common && \
+     add-apt-repository ppa:git-core/ppa && \
+     apt-get update && \
      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
      git \
      python3 \
@@ -83,6 +91,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 COPY --from=comfyui-sage --chown=${CONT_USER}:${CONT_GROUP} /opt /opt
 WORKDIR /opt/ComfyUI
 ENV PATH=/opt/venv/bin:${PATH}
+#RUN git clone https://github.com/comfyanonymous/ComfyUI.git --revision=b59750a86a4687056528f1d59470e207063a73a3 .
 RUN git clone https://github.com/comfyanonymous/ComfyUI.git .
 COPY --chown=${CONT_USER}:${CONT_GROUP} --chmod=550 install-dependencies.sh install-dependencies.sh
 RUN --mount=type=cache,target=/root/.cache/pip \
@@ -103,6 +112,9 @@ ENV CONT_CUDA_VER_MINOR=${CONT_CUDA_VER_MINOR}
 RUN rm -f /etc/apt/apt.conf.d/docker-clean
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
      --mount=type=cache,target=/var/lib/apt,sharing=locked \
+     apt-get update && \
+     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends software-properties-common && \
+     add-apt-repository ppa:git-core/ppa && \
      apt-get update && \
      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
      gosu \
@@ -128,7 +140,9 @@ COPY --from=comfyui-app --chown=${CONT_USER}:${CONT_GROUP} /home/${CONT_USER}/.l
 COPY --from=comfyui-app --chown=${CONT_USER}:${CONT_GROUP} /home/${CONT_USER}/.config /home/${CONT_USER}/.config
 COPY --from=comfyui-app --chown=${CONT_USER}:${CONT_GROUP} /opt /opt
 WORKDIR /opt/ComfyUI
-ENV PATH=/home/${CONT_USER}/.local/bin:/opt/venv/bin:${PATH}
+ENV CUDA_HOME=/usr/local/cuda-${CONT_CUDA_VER_MAJOR}.${CONT_CUDA_VER_MINOR}
+ENV PATH=/home/${CONT_USER}/.local/bin:/opt/venv/bin:${CUDA_HOME}/bin:${PATH}
+ENV LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${CUDA_HOME}/lib64
 COPY --chown=${CONT_USER}:${CONT_GROUP} --chmod=440 torch_compile_optimization.py custom_nodes/torch_compile_optimization.py
 COPY --chown=${CONT_USER}:${CONT_GROUP} --chmod=440 extra_model_paths.yaml extra_model_paths.yaml
 COPY --chown=${CONT_USER}:${CONT_GROUP} --chmod=550 entrypoint.sh /opt/entrypoint.sh

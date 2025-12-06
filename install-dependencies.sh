@@ -8,17 +8,17 @@ CN_DIR=${CUI_DIR}/custom_nodes
 echo "↳ Installing ComfyUI and custom node dependencies in $CUI_DIR..."
 
 declare -A REPOS=(
-  ["comfyui-manager"]="https://github.com/Comfy-Org/ComfyUI-Manager.git"
-  ["rgthree-comfy"]="https://github.com/rgthree/rgthree-comfy.git"
-  ["comfyui-kjnodes"]="https://github.com/kijai/ComfyUI-KJNodes.git"
-  ["wanblockswap"]="https://github.com/orssorbit/ComfyUI-wanBlockswap.git"
-  ["cg-use-everywhere"]="https://github.com/chrisgoringe/cg-use-everywhere.git"
-  ["comfyui-custom-scripts"]="https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git"
-  ["ComfyUI-GGUF"]="https://github.com/city96/ComfyUI-GGUF.git"
-  ["comfyui-impact-subpack"]="https://github.com/ltdrdata/ComfyUI-Impact-Subpack.git"
-  ["comfyui-mxtoolkit"]="https://github.com/Smirnov75/ComfyUI-mxToolkit.git"
-  ["ComfyUI-WanMoeKSampler"]="https://github.com/stduhpf/ComfyUI-WanMoeKSampler.git"
-  ["crt-nodes"]="https://github.com/plugcrypt/CRT-Nodes.git"
+  # ["comfyui-manager"]="https://github.com/Comfy-Org/ComfyUI-Manager.git"
+  # ["rgthree-comfy"]="https://github.com/rgthree/rgthree-comfy.git"
+  # ["comfyui-kjnodes"]="https://github.com/kijai/ComfyUI-KJNodes.git"
+  # ["wanblockswap"]="https://github.com/orssorbit/ComfyUI-wanBlockswap.git"
+  # ["cg-use-everywhere"]="https://github.com/chrisgoringe/cg-use-everywhere.git"
+  # ["comfyui-custom-scripts"]="https://github.com/pythongosssss/ComfyUI-Custom-Scripts.git"
+  # ["ComfyUI-GGUF"]="https://github.com/city96/ComfyUI-GGUF.git"
+  # ["comfyui-impact-subpack"]="https://github.com/ltdrdata/ComfyUI-Impact-Subpack.git"
+  # ["comfyui-mxtoolkit"]="https://github.com/Smirnov75/ComfyUI-mxToolkit.git"
+  # ["ComfyUI-WanMoeKSampler"]="https://github.com/stduhpf/ComfyUI-WanMoeKSampler.git"
+  # ["crt-nodes"]="https://github.com/plugcrypt/CRT-Nodes.git"
 )
 
 echo "↳ Initializing custom_nodes…"
@@ -37,5 +37,7 @@ for dir in "$CN_DIR"/*/; do
     req+="-r ${dir}requirements.txt "
   fi
 done
-echo "  ↳ python -m pip install --pre --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} --extra-index-url https://pypi.org/simple -U $req"
-python -m pip install --pre --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} --extra-index-url https://pypi.org/simple -U $req
+echo "  ↳ python -m pip install --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} --extra-index-url https://pypi.org/simple -U $req"
+python -m pip install --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} --extra-index-url https://pypi.org/simple -U $req
+#echo "  ↳ python -m pip install --pre --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} --extra-index-url https://pypi.org/simple -U $req"
+#python -m pip install --pre --index-url ${CONT_TORCH_INDEX_PREFIX}/cu${CONT_CUDA_VER_MAJOR}${CONT_CUDA_VER_MINOR} --extra-index-url https://pypi.org/simple -U $req
