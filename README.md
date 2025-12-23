@@ -18,9 +18,9 @@ Cuda, distro, and Torch versions are controlled by values in the `.env` file.
 If this is your first time building this, you'll want to run `prerequisites.bat` as that will setup the docker networks for these containers.
 Create a copy of `.env-sample` and rename to `.env`.
 Minimally, you'll want to edit the `.env` file to adjust `TORCH_CUDA_ARCH_LIST` to match your GPU's architecture version.
-Run the `build.bat` script.
+Run the `build.ps1` PowerShell script.
 This builds the image, and then creates the containers.
-This may take a while. It takes approximately 45 minutes on my machine.
+This may take a while.
 
 ## Starting
 
