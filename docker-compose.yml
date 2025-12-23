@@ -18,6 +18,10 @@ services:
         CONT_TORCH_INDEX_PREFIX: ${CONT_TORCH_INDEX_PREFIX}
         CONT_TORCH_VERSION_DEP_STRING: ${CONT_TORCH_VERSION_DEP_STRING}
         TORCH_CUDA_ARCH_LIST: ${TORCH_CUDA_ARCH_LIST}
+        CONT_XFORMERS_COMMIT_HASH_FULL: ${CONT_XFORMERS_COMMIT_HASH_FULL}
+        CONT_SAGEATTN_COMMIT_HASH_FULL: ${CONT_SAGEATTN_COMMIT_HASH_FULL}
+        CONT_COMFYUI_COMMIT_HASH_FULL: ${CONT_COMFYUI_COMMIT_HASH_FULL}
+        CONT_COMFYUI_COMMIT_VERSION: ${CONT_COMFYUI_COMMIT_VERSION}
         CONT_USER: ${CONT_USER}
         CONT_GROUP: ${CONT_GROUP}
     image: comfyui:latest
@@ -31,6 +35,12 @@ services:
         "--base-directory",
         "/opt/ComfyUI",
       ]
+    healthcheck:
+      test: curl --fail http://127.0.0.1:8188 || exit 1
+      interval: 15s
+      timeout: 5s
+      start_period: 15s
+      retries: 3
     restart: no
     sysctls:
       net.ipv6.conf.all.disable_ipv6: 1
