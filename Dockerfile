@@ -56,7 +56,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
      rm -Rf /var/lib/apt/lists/*
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-     python -m venv /opt/venv
+     python -m venv --copies /opt/venv
 
 ENV CUDA_HOME=/usr/local/cuda-${CONT_CUDA_VER_MAJOR}.${CONT_CUDA_VER_MINOR}
 ENV PATH=/opt/venv/bin:${PATH}:${CUDA_HOME}/bin
@@ -108,10 +108,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
      DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
      gosu \
      build-essential \
-     python3 \
-     python3-pip \
-     python3-dev \
-     python-is-python3 \
+     libpython3-dev \
      libgl1 \
      libglx-mesa0 \
      libglib2.0-0 \
